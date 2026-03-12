@@ -1,4 +1,4 @@
-import type { Schema, Table, Column, ForeignKey, ParseResult, ParseError } from '../types/schema';
+import type { Table, Column, ForeignKey, ParseResult, ParseError } from '../types/schema';
 
 interface JsonTable {
   name?: string;

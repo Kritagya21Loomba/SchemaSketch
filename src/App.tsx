@@ -21,7 +21,7 @@ function App() {
   const handleExport = async () => {
     if (!svgRef.current) return;
     try {
-      const dataUrl = await toPng(svgRef.current, {
+      const dataUrl = await toPng(svgRef.current as unknown as HTMLElement, {
         backgroundColor: COLORS.background,
         pixelRatio: 2,
       });

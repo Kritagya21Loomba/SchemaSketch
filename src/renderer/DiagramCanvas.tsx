@@ -46,7 +46,7 @@ export const DiagramCanvas = React.forwardRef<SVGSVGElement, DiagramCanvasProps>
     }, [schema, mergedNodes]);
 
     // Pan/zoom
-    const { viewBox, zoom, handlers: panHandlers } = usePanZoom(bounds);
+    const { viewBox, handlers: panHandlers } = usePanZoom(bounds);
 
     // Drag
     const getNodePosition = useCallback((tableIndex: number): Point => {
@@ -65,7 +65,7 @@ export const DiagramCanvas = React.forwardRef<SVGSVGElement, DiagramCanvasProps>
     }, []);
 
     const { handlePointerDown: onTablePointerDown, handlePointerMove: onDragMove, handlePointerUp: onDragUp } =
-      useDragTable(handleDrag, getNodePosition, zoom);
+      useDragTable(handleDrag, getNodePosition);
 
     // Highlighted edges/tables
     const highlightedEdges = new Set<number>();
@@ -93,8 +93,8 @@ export const DiagramCanvas = React.forwardRef<SVGSVGElement, DiagramCanvasProps>
           panHandlers.onPointerMove(e);
           onDragMove(e);
         }}
-        onPointerUp={(e) => {
-          panHandlers.onPointerUp(e);
+        onPointerUp={() => {
+          panHandlers.onPointerUp();
           onDragUp();
         }}
       >

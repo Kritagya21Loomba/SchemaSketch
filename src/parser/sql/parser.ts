@@ -3,6 +3,14 @@ import type { Token } from './types';
 import { tokenize } from './tokenizer';
 import type { Schema, Table, Column, ForeignKey, ParseResult, ParseError } from '../../types/schema';
 
+const TOKEN_NAMES = Object.fromEntries(
+  Object.entries(TokenType).map(([k, v]) => [v, k])
+) as Record<number, string>;
+
+function tokenTypeName(type: TokenType): string {
+  return TOKEN_NAMES[type] ?? String(type);
+}
+
 interface ParserContext {
   tokens: Token[];
   pos: number;
@@ -31,7 +39,7 @@ function expect(ctx: ParserContext, type: TokenType): Token | null {
     return advance(ctx);
   }
   ctx.errors.push({
-    message: `Expected ${TokenType[type]}, got "${token.value}"`,
+    message: `Expected ${tokenTypeName(type)}, got "${token.value}"`,
     line: token.line,
     column: token.col,
   });

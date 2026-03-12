@@ -11,7 +11,6 @@ interface DragState {
 export function useDragTable(
   onDrag: (tableIndex: number, position: Point) => void,
   getNodePosition: (tableIndex: number) => Point,
-  zoom: number,
 ) {
   const dragRef = useRef<DragState>({
     active: false,

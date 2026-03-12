@@ -1,22 +1,26 @@
-export enum TokenType {
+export const TokenType = {
   // Keywords
-  CREATE, TABLE, IF, NOT, EXISTS, PRIMARY, KEY, FOREIGN, REFERENCES,
-  UNIQUE, NULL, DEFAULT, CONSTRAINT, ALTER, ADD,
-  ON, DELETE, UPDATE, CASCADE, SET, RESTRICT, NO, ACTION, CHECK,
+  CREATE: 0, TABLE: 1, IF: 2, NOT: 3, EXISTS: 4, PRIMARY: 5, KEY: 6,
+  FOREIGN: 7, REFERENCES: 8, UNIQUE: 9, NULL: 10, DEFAULT: 11,
+  CONSTRAINT: 12, ALTER: 13, ADD: 14,
+  ON: 15, DELETE: 16, UPDATE: 17, CASCADE: 18, SET: 19, RESTRICT: 20,
+  NO: 21, ACTION: 22, CHECK: 23,
 
   // Symbols
-  LPAREN, RPAREN, COMMA, SEMICOLON, DOT,
+  LPAREN: 24, RPAREN: 25, COMMA: 26, SEMICOLON: 27, DOT: 28,
 
   // Literals
-  IDENTIFIER,
-  QUOTED_IDENT,
-  NUMBER,
-  STRING,
+  IDENTIFIER: 29,
+  QUOTED_IDENT: 30,
+  NUMBER: 31,
+  STRING: 32,
 
   // Special
-  EOF,
-  UNKNOWN,
-}
+  EOF: 33,
+  UNKNOWN: 34,
+} as const;
+
+export type TokenType = (typeof TokenType)[keyof typeof TokenType];
 
 export type Token = {
   type: TokenType;
