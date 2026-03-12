@@ -21,7 +21,12 @@ export function usePanZoom(initialBounds: Rect) {
   const isPanningRef = useRef(false);
   const lastPointerRef = useRef({ x: 0, y: 0 });
 
-  const viewBox = `${initialBounds.x - state.panX / state.zoom} ${initialBounds.y - state.panY / state.zoom} ${initialBounds.width / state.zoom} ${initialBounds.height / state.zoom}`;
+  const vbX = initialBounds.x - state.panX / state.zoom;
+  const vbY = initialBounds.y - state.panY / state.zoom;
+  const vbW = initialBounds.width / state.zoom;
+  const vbH = initialBounds.height / state.zoom;
+  const viewBox = `${vbX} ${vbY} ${vbW} ${vbH}`;
+  const parsedViewBox = { x: vbX, y: vbY, width: vbW, height: vbH };
 
   const handleWheel = useCallback((e: React.WheelEvent) => {
     e.preventDefault();
@@ -62,6 +67,7 @@ export function usePanZoom(initialBounds: Rect) {
 
   return {
     viewBox,
+    parsedViewBox,
     zoom: state.zoom,
     handlers: {
       onWheel: handleWheel,

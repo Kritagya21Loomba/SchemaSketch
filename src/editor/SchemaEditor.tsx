@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { useCodeMirror } from './useCodeMirror';
+import { useTheme } from '../theme';
 import type { SchemaMode } from '../types/schema';
 
 interface SchemaEditorProps {
@@ -10,7 +11,8 @@ interface SchemaEditorProps {
 
 export function SchemaEditor({ value, onChange, mode }: SchemaEditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  useCodeMirror(containerRef, value, onChange, mode);
+  const { theme } = useTheme();
+  useCodeMirror(containerRef, value, onChange, mode, theme.name);
 
   return (
     <div

@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { Layout } from './components/Layout';
 import { Toolbar } from './components/Toolbar';
 import { ModeToggle } from './components/ModeToggle';
+import { ThemeToggle } from './components/ThemeToggle';
 import { PresetSelector } from './components/PresetSelector';
 import { ExportButton } from './components/ExportButton';
 import { ErrorBanner } from './components/ErrorBanner';
@@ -9,20 +10,21 @@ import { SchemaEditor } from './editor/SchemaEditor';
 import { DiagramCanvas } from './renderer/DiagramCanvas';
 import { useSchema } from './hooks/useSchema';
 import { useLayout } from './hooks/useLayout';
+import { useTheme } from './theme';
 import { PRESETS } from './presets';
 import { toPng } from 'html-to-image';
-import { COLORS } from './renderer/styles';
 
 function App() {
   const { rawText, setRawText, mode, switchMode, parseResult, loadPreset } = useSchema();
   const layout = useLayout(parseResult.schema);
   const svgRef = useRef<SVGSVGElement>(null);
+  const { theme } = useTheme();
 
   const handleExport = async () => {
     if (!svgRef.current) return;
     try {
       const dataUrl = await toPng(svgRef.current as unknown as HTMLElement, {
-        backgroundColor: COLORS.background,
+        backgroundColor: theme.colors.background,
         pixelRatio: 2,
       });
       const link = document.createElement('a');
@@ -66,6 +68,7 @@ function App() {
           {/* Toolbar */}
           <Toolbar>
             <ModeToggle mode={mode} onChange={switchMode} />
+            <ThemeToggle />
             <div style={{ flex: 1 }} />
             <PresetSelector presets={PRESETS} onSelect={(p) => loadPreset(p.name)} />
           </Toolbar>

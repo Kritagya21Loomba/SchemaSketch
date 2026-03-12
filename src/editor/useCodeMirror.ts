@@ -6,13 +6,18 @@ import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from '@cod
 import { sql, PostgreSQL } from '@codemirror/lang-sql';
 import { json } from '@codemirror/lang-json';
 import { oneDarkHighlightStyle } from '@codemirror/theme-one-dark';
-import { schemaSketchTheme } from './themes';
+import { schemaSketchDarkTheme, schemaSketchLightTheme } from './themes';
 import type { SchemaMode } from '../types/schema';
 
 const languageCompartment = new Compartment();
+const themeCompartment = new Compartment();
 
 function getLanguageExtension(mode: SchemaMode) {
   return mode === 'sql' ? sql({ dialect: PostgreSQL }) : json();
+}
+
+function getThemeExtension(themeName: 'dark' | 'light') {
+  return themeName === 'dark' ? schemaSketchDarkTheme : schemaSketchLightTheme;
 }
 
 export function useCodeMirror(
@@ -20,6 +25,7 @@ export function useCodeMirror(
   value: string,
   onChange: (value: string) => void,
   mode: SchemaMode,
+  themeName: 'dark' | 'light' = 'dark',
 ) {
   const viewRef = useRef<EditorView | null>(null);
   const onChangeRef = useRef(onChange);
@@ -47,9 +53,9 @@ export function useCodeMirror(
         bracketMatching(),
         keymap.of([...defaultKeymap, ...historyKeymap]),
         languageCompartment.of(getLanguageExtension(mode)),
+        themeCompartment.of(getThemeExtension(themeName)),
         syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
         syntaxHighlighting(oneDarkHighlightStyle),
-        schemaSketchTheme,
         updateListener,
         EditorView.lineWrapping,
       ],
@@ -77,6 +83,14 @@ export function useCodeMirror(
       effects: languageCompartment.reconfigure(getLanguageExtension(mode)),
     });
   }, [mode]);
+
+  // Sync theme changes
+  useEffect(() => {
+    if (!viewRef.current) return;
+    viewRef.current.dispatch({
+      effects: themeCompartment.reconfigure(getThemeExtension(themeName)),
+    });
+  }, [themeName]);
 
   // Sync external value changes (e.g. preset loading)
   useEffect(() => {

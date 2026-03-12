@@ -2,10 +2,11 @@ import React, { useState, useMemo, useCallback } from 'react';
 import type { Schema } from '../types/schema';
 import type { LayoutResult, LayoutNode, Point } from '../layout/types';
 import { routeEdges } from '../layout/edge-routing';
-import { COLORS } from './styles';
+import { useTheme } from '../theme';
 import { Defs } from './Defs';
 import { TableNode } from './TableNode';
 import { RelationshipEdge } from './RelationshipEdge';
+import { Legend } from './Legend';
 import { usePanZoom } from '../hooks/usePanZoom';
 import { useDragTable } from '../hooks/useDragTable';
 
@@ -16,6 +17,8 @@ interface DiagramCanvasProps {
 
 export const DiagramCanvas = React.forwardRef<SVGSVGElement, DiagramCanvasProps>(
   function DiagramCanvas({ schema, layout }, ref) {
+    const { theme } = useTheme();
+    const colors = theme.colors;
     const [hoveredTable, setHoveredTable] = useState<number | null>(null);
     const [nodeOverrides, setNodeOverrides] = useState<Map<number, Point>>(new Map());
     const { nodes: baseNodes, bounds } = layout;
@@ -46,7 +49,7 @@ export const DiagramCanvas = React.forwardRef<SVGSVGElement, DiagramCanvasProps>
     }, [schema, mergedNodes]);
 
     // Pan/zoom
-    const { viewBox, handlers: panHandlers } = usePanZoom(bounds);
+    const { viewBox, parsedViewBox, handlers: panHandlers } = usePanZoom(bounds);
 
     // Drag
     const getNodePosition = useCallback((tableIndex: number): Point => {
@@ -87,7 +90,7 @@ export const DiagramCanvas = React.forwardRef<SVGSVGElement, DiagramCanvasProps>
         width="100%"
         height="100%"
         viewBox={viewBox}
-        style={{ display: 'block', background: COLORS.background, cursor: 'grab' }}
+        style={{ display: 'block', background: colors.background, cursor: 'grab' }}
         {...panHandlers}
         onPointerMove={(e) => {
           panHandlers.onPointerMove(e);
@@ -106,7 +109,7 @@ export const DiagramCanvas = React.forwardRef<SVGSVGElement, DiagramCanvasProps>
           y={bounds.y - bgPad}
           width={bounds.width + bgPad * 2}
           height={bounds.height + bgPad * 2}
-          fill={COLORS.background}
+          fill={colors.background}
         />
         <rect
           x={bounds.x - bgPad}
@@ -114,7 +117,7 @@ export const DiagramCanvas = React.forwardRef<SVGSVGElement, DiagramCanvasProps>
           width={bounds.width + bgPad * 2}
           height={bounds.height + bgPad * 2}
           filter="url(#grain)"
-          opacity={0.06}
+          opacity={colors.grainOpacity}
         />
 
         {/* Edges (behind nodes) */}
@@ -145,6 +148,9 @@ export const DiagramCanvas = React.forwardRef<SVGSVGElement, DiagramCanvasProps>
             />
           );
         })}
+
+        {/* Legend */}
+        <Legend viewBox={parsedViewBox} />
       </svg>
     );
   }

@@ -1,5 +1,6 @@
 import type { Table } from '../types/schema';
-import { COLORS, DIMS, FONTS } from './styles';
+import { useTheme } from '../theme';
+import { DIMS, FONTS } from './styles';
 
 interface TableNodeProps {
   table: Table;
@@ -24,6 +25,9 @@ export function TableNode({
   onMouseLeave,
   onPointerDown,
 }: TableNodeProps) {
+  const { theme } = useTheme();
+  const colors = theme.colors;
+
   return (
     <g
       transform={`translate(${x}, ${y})`}
@@ -39,8 +43,8 @@ export function TableNode({
         ry={DIMS.cardRadius}
         width={width}
         height={height}
-        fill={COLORS.cardBg}
-        stroke={highlighted ? COLORS.fkAccent : COLORS.cardBorder}
+        fill={colors.cardBg}
+        stroke={highlighted ? colors.fkAccent : colors.cardBorder}
         strokeWidth={highlighted ? 2 : 1.5}
         filter={highlighted ? 'url(#glow)' : 'url(#card-shadow)'}
       />
@@ -54,7 +58,7 @@ export function TableNode({
         fontWeight={800}
         fontSize={13}
         letterSpacing="0.08em"
-        fill={COLORS.headerText}
+        fill={colors.headerText}
         style={{ textTransform: 'uppercase' } as React.CSSProperties}
       >
         {table.name.toUpperCase()}
@@ -66,7 +70,7 @@ export function TableNode({
         y1={DIMS.headerHeight - 2}
         x2={width - 12}
         y2={DIMS.headerHeight - 2}
-        stroke={COLORS.divider}
+        stroke={colors.divider}
         strokeWidth={1}
       />
 
@@ -85,7 +89,7 @@ export function TableNode({
                 fontFamily={FONTS.columnName}
                 fontSize={10}
                 fontWeight={500}
-                fill={COLORS.pkAccent}
+                fill={colors.pkAccent}
               >
                 PK
               </text>
@@ -97,7 +101,7 @@ export function TableNode({
                 fontFamily={FONTS.columnName}
                 fontSize={10}
                 fontWeight={500}
-                fill={COLORS.fkAccent}
+                fill={colors.fkAccent}
               >
                 FK
               </text>
@@ -107,7 +111,7 @@ export function TableNode({
               y={0}
               fontFamily={FONTS.columnName}
               fontSize={12}
-              fill={isFk ? COLORS.fkAccent : COLORS.columnText}
+              fill={isFk ? colors.fkAccent : colors.columnText}
             >
               {col.name}
             </text>
@@ -117,7 +121,7 @@ export function TableNode({
               textAnchor="end"
               fontFamily={FONTS.columnName}
               fontSize={11}
-              fill={COLORS.typeText}
+              fill={colors.typeText}
             >
               {col.type}
             </text>
