@@ -1,0 +1,80 @@
+{
+  "tables": [
+    {
+      "name": "users",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "email", "type": "varchar(255)", "unique": true },
+        { "name": "name", "type": "text" },
+        { "name": "created_at", "type": "timestamp" }
+      ]
+    },
+    {
+      "name": "categories",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "name", "type": "varchar(100)", "unique": true },
+        { "name": "parent_category_id", "type": "uuid", "nullable": true }
+      ],
+      "foreignKeys": [
+        { "column": "parent_category_id", "references": { "table": "categories", "column": "id" } }
+      ]
+    },
+    {
+      "name": "products",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "name", "type": "varchar(255)" },
+        { "name": "description", "type": "text", "nullable": true },
+        { "name": "price", "type": "decimal(10,2)" },
+        { "name": "category_id", "type": "uuid" },
+        { "name": "created_at", "type": "timestamp" }
+      ],
+      "foreignKeys": [
+        { "column": "category_id", "references": { "table": "categories", "column": "id" } }
+      ]
+    },
+    {
+      "name": "orders",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "user_id", "type": "uuid" },
+        { "name": "status", "type": "varchar(50)" },
+        { "name": "total", "type": "decimal(10,2)" },
+        { "name": "created_at", "type": "timestamp" }
+      ],
+      "foreignKeys": [
+        { "column": "user_id", "references": { "table": "users", "column": "id" } }
+      ]
+    },
+    {
+      "name": "order_items",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "order_id", "type": "uuid" },
+        { "name": "product_id", "type": "uuid" },
+        { "name": "quantity", "type": "integer" },
+        { "name": "unit_price", "type": "decimal(10,2)" }
+      ],
+      "foreignKeys": [
+        { "column": "order_id", "references": { "table": "orders", "column": "id" } },
+        { "column": "product_id", "references": { "table": "products", "column": "id" } }
+      ]
+    },
+    {
+      "name": "reviews",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "user_id", "type": "uuid" },
+        { "name": "product_id", "type": "uuid" },
+        { "name": "rating", "type": "integer" },
+        { "name": "body", "type": "text", "nullable": true },
+        { "name": "created_at", "type": "timestamp" }
+      ],
+      "foreignKeys": [
+        { "column": "user_id", "references": { "table": "users", "column": "id" } },
+        { "column": "product_id", "references": { "table": "products", "column": "id" } }
+      ]
+    }
+  ]
+}

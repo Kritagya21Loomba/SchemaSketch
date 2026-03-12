@@ -1,0 +1,83 @@
+{
+  "tables": [
+    {
+      "name": "teams",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "name", "type": "varchar(100)" },
+        { "name": "country", "type": "varchar(100)" },
+        { "name": "engine_supplier", "type": "varchar(100)" }
+      ]
+    },
+    {
+      "name": "drivers",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "name", "type": "varchar(255)" },
+        { "name": "number", "type": "integer" },
+        { "name": "team_id", "type": "uuid" }
+      ],
+      "foreignKeys": [
+        { "column": "team_id", "references": { "table": "teams", "column": "id" } }
+      ]
+    },
+    {
+      "name": "circuits",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "name", "type": "varchar(255)" },
+        { "name": "country", "type": "varchar(100)" },
+        { "name": "length_km", "type": "decimal(5,3)" },
+        { "name": "num_turns", "type": "integer" }
+      ]
+    },
+    {
+      "name": "races",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "circuit_id", "type": "uuid" },
+        { "name": "season", "type": "integer" },
+        { "name": "round", "type": "integer" },
+        { "name": "date", "type": "date" }
+      ],
+      "foreignKeys": [
+        { "column": "circuit_id", "references": { "table": "circuits", "column": "id" } }
+      ]
+    },
+    {
+      "name": "race_results",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "race_id", "type": "uuid" },
+        { "name": "driver_id", "type": "uuid" },
+        { "name": "position", "type": "integer" },
+        { "name": "time_ms", "type": "bigint", "nullable": true },
+        { "name": "points", "type": "decimal(4,1)" },
+        { "name": "fastest_lap", "type": "boolean" }
+      ],
+      "foreignKeys": [
+        { "column": "race_id", "references": { "table": "races", "column": "id" } },
+        { "column": "driver_id", "references": { "table": "drivers", "column": "id" } }
+      ]
+    },
+    {
+      "name": "telemetry_samples",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "race_id", "type": "uuid" },
+        { "name": "driver_id", "type": "uuid" },
+        { "name": "lap", "type": "integer" },
+        { "name": "timestamp_ms", "type": "bigint" },
+        { "name": "speed_kph", "type": "decimal(6,2)" },
+        { "name": "throttle", "type": "decimal(5,2)" },
+        { "name": "brake", "type": "decimal(5,2)" },
+        { "name": "gear", "type": "integer" },
+        { "name": "rpm", "type": "integer" }
+      ],
+      "foreignKeys": [
+        { "column": "race_id", "references": { "table": "races", "column": "id" } },
+        { "column": "driver_id", "references": { "table": "drivers", "column": "id" } }
+      ]
+    }
+  ]
+}

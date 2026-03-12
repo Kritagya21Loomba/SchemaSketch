@@ -1,0 +1,60 @@
+{
+  "tables": [
+    {
+      "name": "authors",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "name", "type": "varchar(255)" },
+        { "name": "email", "type": "varchar(255)", "unique": true },
+        { "name": "bio", "type": "text", "nullable": true }
+      ]
+    },
+    {
+      "name": "posts",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "author_id", "type": "uuid" },
+        { "name": "title", "type": "varchar(255)" },
+        { "name": "body", "type": "text" },
+        { "name": "status", "type": "varchar(20)" },
+        { "name": "published_at", "type": "timestamp", "nullable": true },
+        { "name": "created_at", "type": "timestamp" }
+      ],
+      "foreignKeys": [
+        { "column": "author_id", "references": { "table": "authors", "column": "id" } }
+      ]
+    },
+    {
+      "name": "tags",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "name", "type": "varchar(100)", "unique": true },
+        { "name": "slug", "type": "varchar(100)", "unique": true }
+      ]
+    },
+    {
+      "name": "post_tags",
+      "columns": [
+        { "name": "post_id", "type": "uuid", "primaryKey": true },
+        { "name": "tag_id", "type": "uuid", "primaryKey": true }
+      ],
+      "foreignKeys": [
+        { "column": "post_id", "references": { "table": "posts", "column": "id" } },
+        { "column": "tag_id", "references": { "table": "tags", "column": "id" } }
+      ]
+    },
+    {
+      "name": "comments",
+      "columns": [
+        { "name": "id", "type": "uuid", "primaryKey": true },
+        { "name": "post_id", "type": "uuid" },
+        { "name": "author_name", "type": "varchar(255)" },
+        { "name": "body", "type": "text" },
+        { "name": "created_at", "type": "timestamp" }
+      ],
+      "foreignKeys": [
+        { "column": "post_id", "references": { "table": "posts", "column": "id" } }
+      ]
+    }
+  ]
+}
